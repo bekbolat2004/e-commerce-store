@@ -23,8 +23,8 @@ from store.settings import DEBUG
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls', namespace='main')),
-    path('catalog/', include('goods.urls', namespace='goods'))
+    path('category/', include('goods.urls', namespace='category'))
 ]
 
 if DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
