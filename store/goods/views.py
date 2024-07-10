@@ -5,18 +5,23 @@ from django.shortcuts import render, get_list_or_404
 
 from goods.models import Products
 
-
-
-def catalog(request, catalog_slug, page=1):
+def catalog(request, catalog_slug):
+    page = request.GET.get('page', 1)
+    on_sale = request.GET.get('on_sale', None)
+    order_by = request.GET.get('order_by', None)
 
     if catalog_slug == 'all':
         goods = Products.objects.all()
     else:
         goods = get_list_or_404(Products.objects.filter(category__slug=catalog_slug))
 
-    paginator = Paginator(goods, 3)
+    if on_sale:
+        goods = goods.filter(discount__gt=0)
+    if order_by and order_by != 'default':
+        goods = goods.order_by(order_by)
 
-    cur_page = paginator.page(page)
+    paginator = Paginator(goods, 3)
+    cur_page = paginator.page(int(page))
     context = {
         'title': "Home - Category ",
         'goods': cur_page,
