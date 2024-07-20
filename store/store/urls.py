@@ -23,7 +23,9 @@ from store.settings import DEBUG
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls', namespace='main')),
-    path('category/', include('goods.urls', namespace='category'))
+    path('category/', include('goods.urls', namespace='category')),
+    path('user/', include('users.urls', namespace='user'))
+
 ]
 
 if DEBUG:
