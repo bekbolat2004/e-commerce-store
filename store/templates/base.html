@@ -46,9 +46,11 @@
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="#">Cart</a>
                         </li>
+                        {% if not user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{% url "users:login" %}">Login</a>
                         </li>
+                        {% else %}
                         <li class="nav-item dropdown ">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,13 +60,16 @@
                                 <li><a class="dropdown-item  text-white" href="carts/cart.html">Cart</a></li>
                                 <li><a class="dropdown-item  text-white" href="{% url "users:profile" %}">Personal Profile</a>
                                 </li>
+                                {% if user.is_admin or user.is_stuff %}
                                 <li><a class="dropdown-item  text-white" href="{% url "admin:index" %}">Admin panel</a></li>
+                                {% endif %}
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item  text-white" href= "{% url "users:logout" %}">Logout</a></li>
                             </ul>
                         </li>
+                        {% endif %}
                     </ul>
                     <form class="d-flex" role="search" action="{% url "category:search" %}" method="get">
                         <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
@@ -176,6 +181,7 @@
                 </div>
                 <div class="col-lg-10">
                     <!-- Контент на странице -->
+                    {% include "includes/notifications.html" %}
                     {% block content %}{% endblock %}
                 </div>
             </div>

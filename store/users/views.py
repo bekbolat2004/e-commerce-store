@@ -1,8 +1,8 @@
 from django.contrib import auth
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
-from users.forms import UserLoginForm
+from users.forms import UserLoginForm, UserRegistrationForm
 
 
 # Creat 'e, our views here.
@@ -26,8 +26,17 @@ def login(request):
 
 
 def regis(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('main:index'))
+    else:
+        form = UserRegistrationForm()
+
     context = {
         'title': 'Home - Главная',
+        'form': form
 
     }
     return render(request, 'users/regis.html', context)
@@ -42,8 +51,7 @@ def profile(request):
 
 
 def logout(request):
-    context = {
-        'title': 'Home - Главная',
 
-    }
-    return render(request, '', context)
+    auth.logout(request)
+
+    return redirect(reverse('main:index'))
