@@ -9,3 +9,6 @@ urlpatterns = [
     path('basket_change/<int:product_id>/', views.basket_change, name='basket_change'),
     path('basket_remove/<int:product_id>/', views.basket_remove, name='basket_remove'),
 ]
+
+
+

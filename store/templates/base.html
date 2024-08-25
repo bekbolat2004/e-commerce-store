@@ -44,7 +44,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link  text-white" href="#">Cart</a>
+                            <a class="nav-link  text-white" href="{% url "user:users_basket" %}">Basket</a>
                         </li>
                         {% if not user.is_authenticated %}
                         <li class="nav-item">
@@ -57,7 +57,7 @@
                                 My Profile
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item  text-white" href="carts/cart.html">Cart</a></li>
+                                <li><a class="dropdown-item  text-white" href="baskets/basket.html">Basket</a></li>
                                 <li><a class="dropdown-item  text-white" href="{% url "users:profile" %}">Personal Profile</a>
                                 </li>
                                 {% if user.is_admin or user.is_stuff %}

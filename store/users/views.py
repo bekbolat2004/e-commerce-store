@@ -63,6 +63,8 @@ def profile(request):
         'form': form
     }
     return render(request, 'users/profile.html', context)
+def users_basket(request):
+    return render(request, 'users/users_basket.html')
 
 @login_required
 def logout(request):
@@ -70,3 +72,5 @@ def logout(request):
     auth.logout(request)
 
     return redirect(reverse('main:index'))
+
+
