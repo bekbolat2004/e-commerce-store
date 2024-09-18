@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
+{% load baskets_tags %}
 
 {% block content %}
+
 <div class="row">
     <div class="container mt-5">
         <div class="row">
@@ -79,16 +81,21 @@
                 </div>
             </div>
             <!-- Корзина -->
-{#            {% user_carts request as carts %}#}
+            {% user_baskets request as baskets %}
 
             <div class="col-md-7">
                 <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
                     <h3 class="text-center mb-4">Корзина</h3>
-                    <div class="container" id="cart-items-container">
+                    <div class="container" id="basket-items-container">
                         <!-- Разметка корзины -->
-{#                        {% include "carts/includes/included_cart.html" %}#}
+                        {% include "baskets/includes/included_basket.html" %}
                         <!-- Закончилась разметка корзины -->
                     </div>
+                     {% if baskets %}
+                <a class="btn btn-dark" href="orders/create_order.html">
+                    Оформить заказ
+                </a>
+                {% endif %}
                 </div>
             </div>
             <!-- Оформленные заказы -->

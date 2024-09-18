@@ -10,11 +10,11 @@ from users.models import User
 class BasketQueryset(models.QuerySet):
 
     def total_price(self):
-        return sum(cart.products_price() for cart in self)
+        return sum(basket.products_price() for basket in self)
 
     def total_quantity(self):
         if self:
-            return sum(cart.quantity for cart in self)
+            return sum(basket.quantity for basket in self)
         return 0
 
 
@@ -29,8 +29,9 @@ class Basket(models.Model):
         db_table = 'basket'
         verbose_name = "Basket"
         verbose_name_plural = "Baskets"
+        ordering = ("id",)
 
-    # objects = BasketQueryset().as_manager()
+    objects = BasketQueryset().as_manager()
 
     def products_price(self):
         return round(self.product.sell_price() * self.quantity, 2)
