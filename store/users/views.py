@@ -2,6 +2,8 @@ from django.contrib import auth, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.decorators.http import require_POST
 from users.forms import UserLoginForm, UserRegistrationForm,ProfileForm
 from django.contrib.auth.decorators import login_required
 
@@ -10,16 +12,18 @@ def login(request):
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
         if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-            user = auth.authenticate(username=username, password=password)
+            user = form.get_user()
             if user:
                 auth.login(request, user)
-                messages.success(request, f"{username}, you sucessfully logged in")
+                messages.success(request, f"{user.username}, you successfully logged in")
 
                 redirect_page = request.POST.get('next', None)
-                if redirect_page and redirect_page != reverse('user:logout'):
-                      return HttpResponseRedirect(request.POST.get('next'))
+                if redirect_page and url_has_allowed_host_and_scheme(
+                    url=redirect_page,
+                    allowed_hosts={request.get_host()},
+                    require_https=request.is_secure(),
+                ):
+                    return HttpResponseRedirect(redirect_page)
 
                 return HttpResponseRedirect(reverse('main:index'))
     else:
@@ -64,10 +68,12 @@ def profile(request):
         'form': form
     }
     return render(request, 'users/profile.html', context)
+@login_required
 def users_basket(request):
     return render(request, 'users/users_basket.html')
 
 @login_required
+@require_POST
 def logout(request):
     messages.success(request,f"{request.user.username} you successfully logged out")
     auth.logout(request)

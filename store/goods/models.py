@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 
 # Create your models here.
@@ -38,6 +40,6 @@ class Products(models.Model):
 
     def sell_price(self):
         if self.discount:
-            return round(self.price - ((self.price * self.discount) // 100), 2)
-        else:
-            return self.price
+            discount = self.price * self.discount / Decimal("100")
+            return (self.price - discount).quantize(Decimal("0.01"))
+        return self.price
