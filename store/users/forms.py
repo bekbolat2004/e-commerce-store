@@ -8,7 +8,7 @@ class UserLoginForm(AuthenticationForm):
         fields = ['username', 'password']
 
     username=forms.CharField()
-    password=forms.CharField()
+    password=forms.CharField(widget=forms.PasswordInput)
 
     # username = forms.CharField(
     #     widget=forms.TextInput(attrs={'autofocus':True,
@@ -37,9 +37,9 @@ class UserRegistrationForm(UserCreationForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
     username = forms.CharField()
-    email = forms.CharField()
-    password1 = forms.CharField()
-    password2 = forms.CharField()
+    email = forms.EmailField()
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
 
     # first_name = forms.CharField(
     #     widget=forms.TextInput(
@@ -105,7 +105,7 @@ class ProfileForm(UserChangeForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
     username = forms.CharField()
-    email = forms.CharField()
+    email = forms.EmailField()
 
     # image = forms.ImageField(
     #     widget=forms.FileInput(attrs={"class": "form-control mt-3"}), required=False

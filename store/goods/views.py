@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_list_or_404
+from django.shortcuts import get_object_or_404, render
 
 # Create your views here.
 
@@ -17,15 +17,15 @@ def catalog(request, catalog_slug=None):
     elif query:
        goods = q_search(query)
     else:
-        goods = get_list_or_404(Products.objects.filter(category__slug=catalog_slug))
+        goods = Products.objects.filter(category__slug=catalog_slug)
 
     if on_sale:
         goods = goods.filter(discount__gt=0)
-    if order_by and order_by != 'default':
+    if order_by in {'price', '-price'}:
         goods = goods.order_by(order_by)
 
     paginator = Paginator(goods, 3)
-    cur_page = paginator.page(int(page))
+    cur_page = paginator.get_page(page)
     context = {
         'title': "Home - Category ",
         'goods': cur_page,
@@ -36,7 +36,7 @@ def catalog(request, catalog_slug=None):
 
 def product(request, product_slug):
 
-    product = Products.objects.get(slug=product_slug)
+    product = get_object_or_404(Products, slug=product_slug)
 
     context = {
         'product': product

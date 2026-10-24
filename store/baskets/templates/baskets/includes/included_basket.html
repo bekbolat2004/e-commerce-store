@@ -10,16 +10,13 @@
                 <div class="row text-center">
                     <div class="col p-0">
                         <div class="input-group">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-dark btn-sm decrement"
-                                    data-basket-id="" data-basket-change-url="">-</button>
-                            </span>
-                            <input type="text" class="form-control number" value="{{ basket.quantity }}"
-                                readonly>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-dark btn-sm increment"
-                                    data-basket-id="" data-basket-change-url="">+</button>
-                            </span>
+                            <form class="d-flex" action="{% url 'basket:basket_change' basket.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <input type="number" class="form-control number" name="quantity"
+                                    value="{{ basket.quantity }}" min="1" max="{{ basket.product.quantity }}">
+                                <button type="submit" class="btn btn-dark btn-sm">Обновить</button>
+                            </form>
                         </div>
                     </div>
                     <div class="col p-0">
@@ -27,10 +24,14 @@
                     </div>
                     <div class="col p-0"><strong> {{basket.products_price}} ₸</strong></div>
                     <div class="col p-0">
-                        <a href="{% url "basket:basket_remove" basket.id %}" class="remove-from-basket" data-basket-id="">
-                            <img class="mx-1" src="{% static "deps/icons/trash3-fill.svg" %}"
-                                alt="Catalog Icon" width="16" height="16">
-                        </a>
+                        <form action="{% url 'basket:basket_remove' basket.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="btn btn-link p-0" aria-label="Удалить товар">
+                                <img class="mx-1" src="{% static 'deps/icons/trash3-fill.svg' %}"
+                                    alt="" width="16" height="16">
+                            </button>
+                        </form>
                     </div>
                 </div>
             </li>

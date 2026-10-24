@@ -11,8 +11,14 @@
         <div class="row">
             <!-- Миниатюры -->
             <div class="col-md-4">
-                <img src="{{ product.image.url }}"
-                    class="img-thumbnail" data-bs-toggle="modal" data-bs-target="#imageModal1">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}"
+                        class="img-thumbnail" alt="{{ product.name }}"
+                        data-bs-toggle="modal" data-bs-target="#imageModal1">
+                {% else %}
+                    <img src="{% static 'deps/images/baseavatar.jpg' %}"
+                        class="img-thumbnail" alt="Изображение отсутствует">
+                {% endif %}
             </div>
             <div class="col-md-4 ">
                 <p class="product_id mt-3">id: {{ product.display_id }}</p>
@@ -28,8 +34,10 @@
                                 aria-label="Закрыть"></button>
                         </div>
                         <div class="modal-body">
-                            <img src="{{ product.image.url }}"
-                                class="img-fluid" alt="Изображение 1">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}"
+                                    class="img-fluid" alt="{{ product.name }}">
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -41,10 +49,11 @@
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text">{{ product.description }}</p>
 
-            <a href="{% url "basket:basket_add" product.slug %}" class="btn btn-dark add-to-cart"
-            data-product-id="{{ product.id }}">
-            {% csrf_token %}
-            Добавить в корзину</a>
+            <form action="{% url 'basket:basket_add' product.slug %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="btn btn-dark add-to-cart">Добавить в корзину</button>
+            </form>
         </div>
     </div>
 </div>
