@@ -57,6 +57,7 @@
                         <div class="col-md-6 mb-3">
                             <label for="id_password1" class="form-label">Пароль*</label>
                             <input type="password" class="form-control" id="id_password1"
+                                value="{% if form.password1.value %}{{ form.password1.value }}{% endif %}"
                                 name="password1"
                                 placeholder="Введите пароль" required>
                                 {% if form.password1.errors %}
@@ -66,6 +67,7 @@
                         <div class="col-md-6 mb-3">
                             <label for="id_password2" class="form-label">Подтверждение пароля*</label>
                             <input type="password" class="form-control" id="id_password2"
+                                value="{% if form.password2.value %}{{ form.password2.value }}{% endif %}"
                                 name="password2"
                                 placeholder="Подтвердите пароль" required>
                                 {% if form.password2.errors %}
