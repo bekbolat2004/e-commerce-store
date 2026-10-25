@@ -60,7 +60,7 @@ def profile(request):
         form = ProfileForm(instance=request.user)
 
     context = {
-        'title': 'Home - Главная',
+        'title': 'Home - Main Page',
         'form': form
     }
     return render(request, 'users/profile.html', context)
@@ -71,6 +71,5 @@ def users_basket(request):
 def logout(request):
     messages.success(request,f"{request.user.username} you successfully logged out")
     auth.logout(request)
-
     return redirect(reverse('main:index'))
 

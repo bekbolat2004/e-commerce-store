@@ -49,7 +49,7 @@
                         </li>
                         {% if not user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link  text-white" href="{% url "users:login" %}">Login</a>
+                            <a class="nav-link  text-white" href="{% url "user:login" %}">Login</a>
                         </li>
                         {% else %}
                         <li class="nav-item dropdown ">
@@ -59,7 +59,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item  text-white" href="baskets/basket.html">Basket</a></li>
-                                <li><a class="dropdown-item  text-white" href="{% url "users:profile" %}">Personal Profile</a>
+                                <li><a class="dropdown-item  text-white" href="{% url "user:profile" %}">Personal Profile</a>
                                 </li>
                                 {% if user.is_admin or user.is_stuff %}
                                 <li><a class="dropdown-item  text-white" href="{% url "admin:index" %}">Admin panel</a></li>
@@ -67,7 +67,7 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item  text-white" href= "{% url "users:logout" %}">Logout</a></li>
+                                <li><a class="dropdown-item  text-white" href= "{% url "user:logout" %}">Logout</a></li>
                             </ul>
                         </li>
                         {% endif %}
@@ -100,7 +100,7 @@
                     </ul>
                 </div>
                 <!-- Значек корзины, вызывает модальное окно -->
-{#                {% block modal_basket %}{% endblock%}#}
+                {% block modal_basket %}{% endblock %}
                 <!-- Закончилась разметка модального окна -->
             </div>
         </div>
@@ -121,8 +121,7 @@
 
     {% block footer %}{% endblock %}
     <script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
-    <script src="{% static "deps/js/jquery-events.js" %}"></script>
-    <script src="{% static "deps/js/jquery-ajax.js" %}"></script>
     <script src="{% static "deps/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static 'deps/js/jquery-ajax.js' %}?v=3"></script>
 </body>
 </html>

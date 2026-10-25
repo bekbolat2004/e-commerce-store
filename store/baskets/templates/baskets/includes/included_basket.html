@@ -12,13 +12,16 @@
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-dark btn-sm decrement"
-                                    data-basket-id="" data-basket-change-url="">-</button>
+                                    data-basket-id="{{ basket.id }}" data-basket-change-url="{% url "basket:basket_change" %}">
+                                    {% csrf_token %}
+                                    -</button>
                             </span>
-                            <input type="text" class="form-control number" value="{{ basket.quantity }}"
-                                readonly>
+                            <input type="text" class="form-control number" value="{{ basket.quantity }}" readonly>
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-dark btn-sm increment"
-                                    data-basket-id="" data-basket-change-url="">+</button>
+                                    data-basket-id="{{ basket.id }}" data-basket-change-url="{% url "basket:basket_change" %}">
+                                    {% csrf_token %}
+                                    +</button>
                             </span>
                         </div>
                     </div>
@@ -27,7 +30,9 @@
                     </div>
                     <div class="col p-0"><strong> {{basket.products_price}} ₸</strong></div>
                     <div class="col p-0">
-                        <a href="{% url "basket:basket_remove" basket.id %}" class="remove-from-basket" data-basket-id="">
+                        <a href="{% url "basket:basket_remove" %}" class="remove-from-basket"
+                           data-basket-id="{{ basket.id }}">
+                            {% csrf_token %}
                             <img class="mx-1" src="{% static "deps/icons/trash3-fill.svg" %}"
                                 alt="Catalog Icon" width="16" height="16">
                         </a>
