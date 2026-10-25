@@ -91,9 +91,11 @@
                         {% include "baskets/includes/included_basket.html" %}
                         <!-- Закончилась разметка корзины -->
                     </div>
-                    {% if baskets %}
-                        <button class="btn btn-dark" type="button" disabled>Оформление заказа — следующий этап</button>
-                    {% endif %}
+                     {% if baskets %}
+                <a class="btn btn-dark" href="orders/create_order.html">
+                    Оформить заказ
+                </a>
+                {% endif %}
                 </div>
             </div>
             <!-- Оформленные заказы -->
