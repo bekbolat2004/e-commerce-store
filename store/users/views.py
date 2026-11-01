@@ -1,10 +1,12 @@
 from django.contrib import auth, messages
+from django.db.models import Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from users.forms import UserLoginForm, UserRegistrationForm,ProfileForm
 from django.contrib.auth.decorators import login_required
 from baskets.models import Basket
+from orders.models import Order, OrderItem
 
 # Creat 'e, our views here.
 def login(request):
@@ -31,6 +33,7 @@ def login(request):
                 return HttpResponseRedirect(reverse('main:index'))
     else:
         form = UserLoginForm()
+
     context = {
         'title': 'Home - Authorization',
         'form': form
@@ -75,9 +78,17 @@ def profile(request):
     else:
         form = ProfileForm(instance=request.user)
 
+    orders = Order.objects.filter(user=request.user).prefetch_related(
+                Prefetch(
+                    "orderitem_set",
+                     queryset=OrderItem.objects.select_related("product"),
+                )
+            ).order_by("-id")
+
     context = {
-        'title': 'Home - Main Page',
-        'form': form
+        'title': 'Home - Profile',
+        'form': form,
+        'orders': orders,
     }
     return render(request, 'users/profile.html', context)
 def users_basket(request):

@@ -39,8 +39,8 @@
                                 Information
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item  text-white" href="#">Доставка и оплата</a></li>
-                                <li><a class="dropdown-item  text-white" href="#">Контактная информация</a></li>
+                                <li><a class="dropdown-item  text-white" href="#">Delivery and Payment</a></li>
+                                <li><a class="dropdown-item  text-white" href="#">Contact Information</a></li>
                                 <li><a class="dropdown-item  text-white" href="{% url "main:about" %}">About us</a></li>
                             </ul>
                         </li>
@@ -58,10 +58,10 @@
                                 My Profile
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item  text-white" href="baskets/basket.html">Basket</a></li>
+                                <li><a class="dropdown-item  text-white" href="{% url "user:users_basket" %}">Basket</a></li>
                                 <li><a class="dropdown-item  text-white" href="{% url "user:profile" %}">Personal Profile</a>
                                 </li>
-                                {% if user.is_admin or user.is_stuff %}
+                                {% if user.is_admin or user.is_staff %}
                                 <li><a class="dropdown-item  text-white" href="{% url "admin:index" %}">Admin panel</a></li>
                                 {% endif %}
                                 <li>
