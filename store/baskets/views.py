@@ -24,8 +24,13 @@ def basket_add(request):
             Basket.objects.create(user=request.user, product=product, quantity=1)
 
     else:
+        if not request.session.session_key:
+            request.session.create()
+
+        session_key = request.session.session_key
+
         baskets = Basket.objects.filter(
-            session_key=request.session.session_key, product=product)
+            session_key=session_key, product=product)
 
         if baskets.exists():
             basket = baskets.first()
@@ -34,7 +39,7 @@ def basket_add(request):
                 basket.save()
         else:
             Basket.objects.create(
-                session_key=request.session.session_key, product=product, quantity=1)
+                session_key=session_key, product=product, quantity=1)
 
     user_basket = get_user_baskets(request)
     basket_items_html = render_to_string(
@@ -55,7 +60,6 @@ def basket_change(request):
 
     basket.quantity = quantity
     basket.save()
-    updated_quantity = basket.quantity
 
     basket = get_user_baskets(request)
     basket_items_html = render_to_string(
@@ -64,7 +68,6 @@ def basket_change(request):
     response_data = {
         "message": "Количество изменено",
         "basket_items_html": basket_items_html,
-        "quaantity": updated_quantity,
     }
 
     return JsonResponse(response_data)
