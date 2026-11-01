@@ -27,8 +27,8 @@
                     <!-- Закончилась разметка корзины -->
                 </div>
                 {% if baskets %}
-                <a class="btn btn-dark" href="orders/create_order.html">
-                    Оформить заказ
+                <a class="btn btn-dark" href="{% url "orders:create_order" %}">
+                    Submit order
                 </a>
                 {% endif %}
             </div>
