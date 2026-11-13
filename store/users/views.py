@@ -1,44 +1,77 @@
 from django.contrib import auth, messages
+from django.contrib.auth.views import LoginView
 from django.db.models import Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from users.forms import UserLoginForm, UserRegistrationForm,ProfileForm
 from django.contrib.auth.decorators import login_required
 from baskets.models import Basket
 from orders.models import Order, OrderItem
 
 # Creat 'e, our views here.
-def login(request):
-    if request.method == 'POST':
-        form = UserLoginForm(data=request.POST)
-        if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-            user = auth.authenticate(username=username, password=password)
 
-            session_key = request.session.session_key
+class UserLoginView(LoginView):
+    template_name = 'users/login.html'
+    form_class = UserLoginForm
+    #success_url = reverse_lazy('main:index')
 
-            if user:
-                auth.login(request, user)
-                messages.success(request, f"{username}, you sucessfully logged in")
+    def get_success_url(self):
+        redirect_page = self.request.POST.get('next', None)
+        if redirect_page and redirect_page != reverse_lazy('user:logout'):
+            return redirect_page
+        return reverse_lazy('main:index')
 
-                if session_key:
-                    Basket.objects.filter(session_key=session_key).update(user=user)
+    def form_valid(self, form):
+        session_key = self.request.session.session_key
+        user = form.get_user()
 
-                redirect_page = request.POST.get('next', None)
-                if redirect_page and redirect_page != reverse('user:logout'):
-                      return HttpResponseRedirect(request.POST.get('next'))
+        if user:
+            auth.login(self.request , user)
+            if session_key:
+                forgot_baskets = Basket.objects.filter(user=user)
+                if forgot_baskets.exists():
+                    forgot_baskets.delete()
+                Basket.objects.filter(session_key=session_key).update(user=user)
 
-                return HttpResponseRedirect(reverse('main:index'))
-    else:
-        form = UserLoginForm()
+                messages.success(self.request , f"{user.username}, You are logged in ...")
 
-    context = {
-        'title': 'Home - Authorization',
-        'form': form
-    }
-    return render(request, 'users/login.html', context)
+                return HttpResponseRedirect(self.get_success_url())
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Home - Authorization'
+        return context
+
+# def login(request):
+#     if request.method == 'POST':
+#         form = UserLoginForm(data=request.POST)
+#         if form.is_valid():
+#             username = request.POST['username']
+#             password = request.POST['password']
+#             user = auth.authenticate(username=username, password=password)
+#
+#             session_key = request.session.session_key
+#
+#             if user:
+#                 auth.login(request, user)
+#                 messages.success(request, f"{username}, you sucessfully logged in")
+#
+#                 if session_key:
+#                     Basket.objects.filter(session_key=session_key).update(user=user)
+#
+#                 redirect_page = request.POST.get('next', None)
+#                 if redirect_page and redirect_page != reverse('user:logout'):
+#                       return HttpResponseRedirect(request.POST.get('next'))
+#
+#                 return HttpResponseRedirect(reverse('main:index'))
+#     else:
+#         form = UserLoginForm()
+#
+#     context = {
+#         'title': 'Home - Authorization',
+#         'form': form
+#     }
+#     return render(request, 'users/login.html', context)
 
 
 def regis(request):
